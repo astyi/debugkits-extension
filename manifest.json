@@ -1,0 +1,40 @@
+{
+  "manifest_version": 3,
+  "name": "DebugKits API Bridge",
+  "version": "1.0.0",
+  "description": "Enables DebugKits API Tester to send cross-origin HTTP requests without browser CORS restrictions.",
+
+  "permissions": [],
+  "host_permissions": [
+    "http://*/*",
+    "https://*/*"
+  ],
+
+  "externally_connectable": {
+    "matches": [
+      "https://debugkits.com/*",
+      "https://www.debugkits.com/*"
+    ]
+  },
+
+  "background": {
+    "service_worker": "background/service-worker.js",
+    "type": "module"
+  },
+
+  "content_scripts": [
+    {
+      "matches": [
+        "https://debugkits.com/*",
+        "https://www.debugkits.com/*"
+      ],
+      "js": ["content/injector.js"],
+      "run_at": "document_start"
+    }
+  ],
+
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "DebugKits API Bridge"
+  }
+}

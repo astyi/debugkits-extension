@@ -1,0 +1,12 @@
+{
+  "name": "@debugkits/extension-protocol",
+  "version": "1.0.0",
+  "description": "Bridge protocol types shared between DebugKits web app and the Chrome Extension",
+  "main": "index.ts",
+  "types": "index.ts",
+  "exports": {
+    ".": "./index.ts"
+  },
+  "keywords": ["debugkits", "chrome-extension", "bridge", "protocol"],
+  "license": "MIT"
+}
