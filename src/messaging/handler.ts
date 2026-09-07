@@ -65,11 +65,15 @@ export function handleExternalMessage(
   // Validate target URL before executing
   const urlError = validateTargetUrl(msg.url)
   if (urlError) {
+    const urlErrorMessage =
+      urlError === "PRIVATE_NETWORK_BLOCKED"
+        ? "Access to localhost and private network addresses is blocked for security reasons."
+        : `Target URL rejected (${urlError}): ${msg.url}`
     sendResponse({
       type: "HTTP_ERROR",
       requestId: msg.requestId,
       code: urlError,
-      message: `Target URL rejected (${urlError}): ${msg.url}`,
+      message: urlErrorMessage,
     })
     return false
   }

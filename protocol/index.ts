@@ -5,21 +5,32 @@ export const BRIDGE_PROTOCOL_VERSION = "1" as const
 
 export const REQUEST_BODY_SIZE_LIMIT = 10 * 1024 * 1024  // 10 MB
 export const RESPONSE_BODY_SIZE_LIMIT = 20 * 1024 * 1024 // 20 MB
+export const REQUEST_TIMEOUT_MIN = 1_000
 export const REQUEST_TIMEOUT_DEFAULT = 30_000
 export const REQUEST_TIMEOUT_MAX = 300_000
+
+export const REQUEST_ID_MAX_LENGTH = 128
 
 export type HttpMethod =
   | "GET" | "POST" | "PUT" | "PATCH"
   | "DELETE" | "HEAD" | "OPTIONS"
 
+// Runtime-accessible list that mirrors the HttpMethod union above.
+// Both the TypeScript type and this array must be kept in sync.
+export const ALLOWED_HTTP_METHODS: ReadonlyArray<HttpMethod> = [
+  "GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS",
+]
+
 export type ExtensionErrorCode =
-  | "URL_INVALID"           // URL could not be parsed
-  | "URL_PROTOCOL_BLOCKED"  // non-http(s) protocol rejected
-  | "ORIGIN_FORBIDDEN"      // sender origin not in allowlist
-  | "SCHEMA_INVALID"        // message failed schema validation
+  | "URL_INVALID"              // URL could not be parsed
+  | "URL_PROTOCOL_BLOCKED"     // non-http(s) protocol rejected
+  | "PRIVATE_NETWORK_BLOCKED"  // target resolves to localhost or a private/link-local range
+  | "DUPLICATE_REQUEST_ID"     // requestId is already registered to an in-flight request
+  | "ORIGIN_FORBIDDEN"         // sender origin not in allowlist
+  | "SCHEMA_INVALID"           // message failed schema validation
   | "REQUEST_BODY_TOO_LARGE"
   | "RESPONSE_TOO_LARGE"
-  | "REQUEST_NOT_FOUND"     // cancel sent for unknown requestId
+  | "REQUEST_NOT_FOUND"        // cancel sent for unknown requestId
   | "NETWORK_ERROR"
   | "TIMEOUT"
   | "ABORTED"

@@ -1,0 +1,50 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type check
+        run: npm run typecheck
+
+      - name: Test
+        run: npm test
+
+      - name: Build (production)
+        run: npm run build
+
+      - name: Verify production manifest
+        run: node scripts/verify-manifest.mjs
+
+      - name: Create release archive
+        run: |
+          cd dist
+          zip -r ../debugkits-api-bridge-${{ github.ref_name }}.zip .
+
+      - name: Publish GitHub Release
+        run: |
+          gh release create ${{ github.ref_name }} \
+            "debugkits-api-bridge-${{ github.ref_name }}.zip" \
+            --title "DebugKits API Bridge ${{ github.ref_name }}" \
+            --generate-notes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

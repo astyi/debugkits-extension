@@ -1,4 +1,6 @@
 dist/
+dist-test/
 node_modules/
 *.tsbuildinfo
+*.zip
 .DS_Store
